@@ -12,7 +12,7 @@ let isVideoPlaying = false;
  * @param {HTMLVideoElement} videoElm
  */
 //onInsertVideoWhenTargetIsVisible(target, videoElm);
-
+//Calculate when video is on the screen viewport
 function isInViewport(el) {
     const rect = el.getBoundingClientRect();
     return (
@@ -22,7 +22,7 @@ function isInViewport(el) {
         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
 }
-
+//Listener to check when the video is on the viewport
 document.addEventListener('scroll', function () {
     const messageText = isInViewport(target) ?
     createVideoElement('https://vod.addevweb.com/sunmedia/demos/v/normal.mp4') :
@@ -33,23 +33,22 @@ document.addEventListener('scroll', function () {
 }, {
     passive: true
 });
-
+//Create and add the video to the container, use autoplay in true and muted in true(because without this the video will not start)
 function createVideoElement(path)
 {
     if(!isVideoPlaying)
     {
         var video = document.createElement('video');
-        video.id = "myVideo";
         video.src = path;
         video.muted = true;
         video.autoplay = true;
         target.appendChild(video);
-        
-        document.getElementById('myVideo').addEventListener('ended',myHandler,false);
-        function myHandler(e) {
-            target.remove(document.getElementById('myVideo'));
+        //Listener to delete video when ended
+        video.addEventListener('ended',
+        function (e) {
             isVideoPlaying = false;
-        }
+            target.remove(video);
+        });
         isVideoPlaying = true;
     }
 }
